@@ -12,7 +12,7 @@ def category_data():
 
     #categories = ['a','b','c','d']
     categories = sorted(char_folders)
-    categories = categories[:15]
+    #categories = categories[:15]
     print(categories)
     return path_dataset,categories
 training_data = []
@@ -44,13 +44,6 @@ def create_training_data():
 if __name__ == "__main__":
     create_training_data()
     rows,columns = training_data[0][0].shape
-
-    '''
-    print(training_data[1201][1])
-    plt.imshow(training_data[1201][0],cmap="gray")
-    print(f"rows-{rows} cols-{columns}")
-    plt.show()
-    '''
 
     random.shuffle(training_data)
 

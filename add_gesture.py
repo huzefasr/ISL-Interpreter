@@ -55,30 +55,13 @@ def nothing(x):
 
 def read_image():
     cap = cv2.VideoCapture(0)
-    '''
-	cv2.namedWindow("RAW")
-	cv2.createTrackbar("hue_lower","RAW",0,255,nothing)  # 1) Creating trackbar for lower hue value so as to find the desired colored object in frame.
-	cv2.createTrackbar("hue_upper","RAW",30,255,nothing) # Creating trackbar for upper hue value for same reason as above.
-	cv2.createTrackbar("saturation_lower","RAW",41,255,nothing)  # Creating trackbar for lower saturation value for same reason as above.
-	cv2.createTrackbar("saturation_upper","RAW",152,255,nothing)  # Creating trackbar for upper saturation value for same reason as above.
-	cv2.createTrackbar("value_lower","RAW",69,255,nothing)    # Creating trackbar for lower value for same reason as above.
-	cv2.createTrackbar("value_upper","RAW",220,255,nothing)
-    # Creating trackbar for upper value for same reason as above.
-	'''
     keyc, keys = False, False
     while True:
         key = cv2.waitKey(1)
         _, frame = cap.read()
         flip = cv2.flip(frame, 1)
         hsv_flip = cv2.cvtColor(flip, cv2.COLOR_BGR2HSV)
-        '''
-		h1 = cv2.getTrackbarPos("hue_lower","RAW")
-		h2 = cv2.getTrackbarPos("hue_upper","RAW")
-		s1 = cv2.getTrackbarPos("saturation_lower","RAW")
-		s2 = cv2.getTrackbarPos("saturation_upper","RAW")
-		v1 = cv2.getTrackbarPos("value_lower","RAW")
-		v2 = cv2.getTrackbarPos("value_upper","RAW")
-		'''
+
         #flip = draw_rect(flip, mode = 0)
         y, x, c = flip.shape
         x1 = int(x / 2)
@@ -89,7 +72,6 @@ def read_image():
         #roi,flip = draw_rect(flip)
 
         cv2.imshow("RAW", flip)
-
         '''
 		Here we check for input key
 		'''
@@ -124,13 +106,6 @@ def read_image():
 		depending on key pressed we take the action we want to
 		'''
         if keyc:
-            # back = method_backproject(hsv_flip,roi_hist))
-            '''
-            lowerBoundary = np.array([h1,s1,v1],dtype="uint8")
-            upperBoundary = np.array([h2,s2,v2],dtype="uint8")
-            #back = method_inrange(flip,lowerBoundary,upperBoundary)
-            #back = method_pymean(flip)
-            '''
             back = method_backproject(hsv_flip, roi_hist)
             cv2.imshow("back project", back)
 
