@@ -37,7 +37,7 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Flatten())
 #model.add(Dense(128)) # 64 to 32
 
-model.add(Dense(7))  # OG 1
+model.add(Dense(15))  # OG 1
 model.add(Activation('sigmoid'))  # sigmoid
 
 
@@ -47,13 +47,13 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 # batch size should be kept a little low(20-200) to avoid negative results
 
-model.fit(X, Y, batch_size=20, epochs=4, validation_split=0.1)  # OG 30
+model.fit(X, Y, batch_size=20, epochs=3, validation_split=0.1)  # OG 30
 model.save("model_a-d.model")
 
 '''
-i = 3
-while i <= 4:
-    model.fit(X, Y, batch_size=32, epochs=i, validation_split=0.1)  # OG 30
+i = 6
+while i <= 9:
+    model.fit(X, Y, batch_size=30, epochs=i, validation_split=0.1)  # OG 30
     model.save("model_a-g-{}.model".format(i))
     i = i+1
 '''

@@ -12,7 +12,7 @@ def category_data():
 
     #categories = ['a','b','c','d']
     categories = sorted(char_folders)
-    categories = categories[:7]
+    categories = categories[:15]
     print(categories)
     return path_dataset,categories
 training_data = []
