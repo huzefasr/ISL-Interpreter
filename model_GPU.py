@@ -1,19 +1,19 @@
 from keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D,Dropout
 from keras.models import Sequential
 from keras.utils import normalize
+from keras.callbacks import TensorBoard,ModelCheckpoint
 import h5py
-from keras.callbacks import TensorBoard
 import numpy as np
 import tensorflow as tf
 import pickle
 import cv2
 import time
-from keras.callbacks import TensorBoard,ModelCheckpoint
+
 # Load the dataset
 
 X = pickle.load(open("X.pickle", "rb"))
 Y = pickle.load(open("Y.pickle", "rb"))
-modelname = "a-z_GPU{}-25".format(int(time.time()))
+modelname = "a-z_{}-25".format(int(time.time()))
 tensorboard = TensorBoard(log_dir=f"log/{modelname}")
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
 

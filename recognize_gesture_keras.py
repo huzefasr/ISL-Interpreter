@@ -5,11 +5,28 @@ import os
 from methods import method_backproject
 import pickle
 import numpy as np
+import cv2
 path = os.getcwd()
 path = os.path.join(path,'dataset')
-#category = os.listdir(path)
-category = [1,2,3]
+category = sorted(os.listdir(path))
 print(category)
+
+def display(prediction):
+    blackboard = np.ones((150,150))
+    i = 1
+    hit = 0
+    char = ['-']+category
+    hit_og = [prediction]
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    for alphabet in prediction:
+        if alphabet == 1:
+            hit=i
+        i=i+1
+    cv2.putText(blackboard, f"{char[hit]}", (30,100), font, 5, (0, 255, 0),5)
+
+
+    cv2.imshow("Gesture",blackboard)
+
 
 def prepare(mask):
     IMG_SIZE = 50
@@ -18,7 +35,6 @@ def prepare(mask):
     new_array = cv2.resize(img_array,(IMG_SIZE,IMG_SIZE))
     return new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
 
-#####CODE
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
     model = keras.models.load_model("a-z-20.model")
@@ -41,10 +57,10 @@ def prediction_method():
         cv2.imshow('mask',mask)
         if i%3==0:
             prediction = model.predict([prepare(mask)])
-            print(category[int(prediction[0][0])])
-            #print(prediction)
-            numpy = np.array(prediction)
-            print(numpy.astype(int))
+            display(prediction[0])
+            prediction = np.array(prediction)
+            prediction = prediction.astype(int)
+            print(prediction)
 
         i=i+1
         if key == ord('x'):
