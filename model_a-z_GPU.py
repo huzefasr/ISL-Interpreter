@@ -7,12 +7,13 @@ import tensorflow as tf
 import pickle
 import cv2
 import time
+from keras.callbacks import TensorBoard
 # Load the dataset
 
 X = pickle.load(open("X_ab.pickle", "rb"))
 Y = pickle.load(open("Y_ab.pickle", "rb"))
-epoch = 8
-modelname = "a-z_GPU{}-{}".format(int(time.time()),epoch)
+modelname = "a-z_GPU{}".format(int(time.time()))
+tensorboard = TensorBoard(log_dir=f"log/{modelname}")
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
 
 # Scaling the data. /255 since data is image data
@@ -51,13 +52,13 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 # batch size should be kept a little low(20-200) to avoid negative results
 
-model.fit(X, Y, batch_size=50, epochs=epoch, validation_split=0.2)  # OG 30
-model.save(f"{modelname}")
+model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2,callbacks=[tensorboard])  # OG 30
+model.save(f"{modelname}-20")
 
 '''
-i = 6
+i = 8
 while i <= 10:
-    model.fit(X, Y, batch_size=30, epochs=i, validation_split=0.2,callbacks = [board])  # OG 30
-    model.save("{} - ({}).model".format(modelname,i))
+    model.fit(X, Y, batch_size=30, epochs=i, validation_split=0.2, callbacks = [board])  # OG 30
+    model.save("{}-{}).model".format(modelname,i))
     i = i+1
 '''
