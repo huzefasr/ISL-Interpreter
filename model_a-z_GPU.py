@@ -11,8 +11,8 @@ import time
 from keras.callbacks import TensorBoard,ModelCheckpoint
 # Load the dataset
 
-X = pickle.load(open("X_ab.pickle", "rb"))
-Y = pickle.load(open("Y_ab.pickle", "rb"))
+X = pickle.load(open("X.pickle", "rb"))
+Y = pickle.load(open("Y.pickle", "rb"))
 modelname = "a-z_GPU{}-25".format(int(time.time()))
 tensorboard = TensorBoard(log_dir=f"log/{modelname}")
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
