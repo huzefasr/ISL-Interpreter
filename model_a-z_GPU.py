@@ -52,8 +52,8 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 # batch size should be kept a little low(20-200) to avoid negative results
 
-model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2,callbacks=[tensorboard])  # OG 30
-model.save(f"{modelname}-20")
+model.fit(X, Y, batch_size=30, epochs=17, validation_split=0.2,callbacks=[tensorboard])  # OG 30
+model.save(f"{modelname}-17")
 
 '''
 i = 8
