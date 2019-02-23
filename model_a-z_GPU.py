@@ -1,18 +1,19 @@
 from keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D,Dropout
 from keras.models import Sequential
 from keras.utils import normalize
+import h5py
 from keras.callbacks import TensorBoard
 import numpy as np
 import tensorflow as tf
 import pickle
 import cv2
 import time
-from keras.callbacks import TensorBoard
+from keras.callbacks import TensorBoard,ModelCheckpoint
 # Load the dataset
 
 X = pickle.load(open("X_ab.pickle", "rb"))
 Y = pickle.load(open("Y_ab.pickle", "rb"))
-modelname = "a-z_GPU{}".format(int(time.time()))
+modelname = "a-z_GPU{}-25".format(int(time.time()))
 tensorboard = TensorBoard(log_dir=f"log/{modelname}")
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
 
@@ -51,13 +52,12 @@ model.compile(loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
 # batch size should be kept a little low(20-200) to avoid negative results
-
-model.fit(X, Y, batch_size=30, epochs=17, validation_split=0.2,callbacks=[tensorboard])  # OG 30
-model.save(f"{modelname}-17")
+check = ModelCheckpoint("keras-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+model.fit(X, Y, batch_size=30, epochs=25, validation_split=0.2,callbacks=[tensorboard,check])  # OG 30
 
 '''
-i = 8
-while i <= 10:
+i = 20
+while i <= 25:
     model.fit(X, Y, batch_size=30, epochs=i, validation_split=0.2, callbacks = [board])  # OG 30
     model.save("{}-{}).model".format(modelname,i))
     i = i+1
