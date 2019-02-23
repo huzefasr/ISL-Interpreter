@@ -59,10 +59,10 @@ if __name__ == "__main__":
     X = np.array(X).reshape(-1,rows,columns,1)
 
     try:
-        pickle_out = open("X_ab.pickle",'wb')
+        pickle_out = open("X.pickle",'wb')
         pickle.dump(X,pickle_out)
         pickle_out.close()
-        pickle_out = open("Y_ab.pickle",'wb')
+        pickle_out = open("Y.pickle",'wb')
         pickle.dump(Y,pickle_out)
         pickle_out.close()
     except Exception as e:
