@@ -11,7 +11,7 @@ import time
 
 X = pickle.load(open("X_ab.pickle", "rb"))
 Y = pickle.load(open("Y_ab.pickle", "rb"))
-epoch = 10
+epoch = 8
 modelname = "a-z_GPU{}-{}".format(int(time.time()),epoch)
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
 
@@ -51,8 +51,8 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 # batch size should be kept a little low(20-200) to avoid negative results
 
-model.fit(X, Y, batch_size=30, epochs=epoch, validation_split=0.2)  # OG 30
-model.save(f"{modelname}-10")
+model.fit(X, Y, batch_size=50, epochs=epoch, validation_split=0.2)  # OG 30
+model.save(f"{modelname}")
 
 '''
 i = 6
