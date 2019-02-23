@@ -1,5 +1,6 @@
 import cv2
-import tensorflow as tf
+#import tensorflow as tf
+import keras
 import os
 from methods import method_backproject
 import pickle
@@ -20,7 +21,7 @@ def prepare(mask):
 #####CODE
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = tf.keras.models.load_model("a-z_GPU1550903353-10-10.model")
+    model = keras.models.load_model("a-z_GPU1550903353-10-10.model")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
