@@ -20,7 +20,7 @@ def prepare(mask):
 #####CODE
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = tf.keras.models.load_model("model_a-d.model")
+    model = tf.keras.models.load_model("a-z1550892495-9.model")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
