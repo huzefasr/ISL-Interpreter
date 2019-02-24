@@ -93,7 +93,10 @@ def capture_hist():
         x2 = x1 + 70
         y2 = y1 + 200
         rect = cv2.rectangle(flip, (x1, y1), (x2, y2), (255, 0, 0), 1)
-        cv2.imshow("RAW", flip)
+        #cv2.imshow("RAW", flip)
+        imgencode = cv2.emencode('.jpg',flip)[1]
+        stringata=imgencode.tostring()
+        yield (b'--frame\r\n' b'content-Type: text/plain\r\n\r\n'+stringgData+b'\r\n')
         if key == ord('c'):
             keyc = True
             roi = flip[y1:y2, x1:x2]
@@ -120,6 +123,9 @@ def capture_hist():
             back = method_backproject(hsv_flip, roi_hist)
             cv2.imshow("back project", back)
     return None
+
+def calc():
+    return Response(capture_hist().mimetype='multipart/x-mixed-replace; boundary=frame')
 
 ####CODDEEEEE
 

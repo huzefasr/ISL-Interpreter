@@ -13,7 +13,7 @@ import time
 
 X = pickle.load(open("X.pickle", "rb"))
 Y = pickle.load(open("Y.pickle", "rb"))
-modelname = "kernel-25".format(int(time.time()))
+modelname = "a-z-23".format(int(time.time()))
 tensorboard = TensorBoard(log_dir=f"log/{modelname}")
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
 
@@ -52,8 +52,8 @@ model.compile(loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
 # batch size should be kept a little low(20-200) to avoid negative results
-check = ModelCheckpoint("kernel-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
-model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2, callbacks=[tensorboard,check])  # OG 30
+check = ModelCheckpoint("a-z-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+model.fit(X, Y, batch_size=30, epochs=23, validation_split=0.2, callbacks=[tensorboard,check])  # OG 30
 
 '''
 i = 20

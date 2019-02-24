@@ -8,7 +8,7 @@ import pickle
 import numpy as np
 import cv2
 import sys
-from flask import Flask,redirect,render_template
+from flask import Flask,redirect,render_template,Response
 app = Flask(__name__)
 
 @app.route('/')
@@ -26,6 +26,10 @@ def train_model():
 @app.route('/recognize_gesture')
 def recognize_gesture():
     return render_template('recognize_gesture.html')
+
+@app.route('/capture_hist')
+def capture_histogram():
+    return render_template('capture_hist.html')
 
 def display(prediction):
     blackboard = np.ones((150,150))
@@ -92,8 +96,6 @@ def prediction_method():
     cap.release()
     cv2.destroyAllWindows()
 
-
-@app.route("/capture_hist")
 def capture_hist():
     cap = cv2.VideoCapture(0)
     keyc, keys = False, False
@@ -108,7 +110,11 @@ def capture_hist():
         x2 = x1 + 70
         y2 = y1 + 200
         rect = cv2.rectangle(flip, (x1, y1), (x2, y2), (255, 0, 0), 1)
-        cv2.imshow("RAW", flip)
+        #cv2.imshow("RAW", flip)
+        imgencode = cv2.imencode('.jpg',flip)[1]
+        stringData = imgencode.tostring()
+        yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData+b'\r\n')
+
         if key == ord('c'):
             keyc = True
             roi = flip[y1:y2, x1:x2]
@@ -134,8 +140,16 @@ def capture_hist():
 		'''
         if keyc:
             back = method_backproject(hsv_flip, roi_hist)
-            cv2.imshow("back project", back)
+            #cv2.imshow("back project", back)
+            imgencode = cv2.imencode('.jpg',back)[1]
+            stringData = imgencode.tostreing()
+            yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData+b'\r\n')
     return None
 
+@app.route("/calc")
+def calc():
+    return Response( capture_hist(),mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True )
