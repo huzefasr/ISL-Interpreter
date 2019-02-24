@@ -23,17 +23,17 @@ print("({})".format(X.shape[0]/2400)+str(X.shape))  # (2400,50,50,1) - n,y,x,c
 
 
 model = Sequential()
-model.add(Conv2D(32, (5, 5), input_shape=X.shape[1:]))  # 64 3,3
+model.add(Conv2D(64, (5, 5), input_shape=X.shape[1:]))  # 64 3,3
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2))) #
 model.add(Dropout(0.30))
-model.add(Conv2D(64, (5, 5)))  # 5,5
+model.add(Conv2D(128, (5, 5)))  # 5,5
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.30))
 
 # EXTRA
-model.add(Conv2D(32, (5, 5)))  # 5,5
+model.add(Conv2D(64, (5, 5)))  # 5,5
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -52,7 +52,7 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 # batch size should be kept a little low(20-200) to avoid negative results
 check = ModelCheckpoint("kernel-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
-model.fit(X, Y, batch_size=30, epochs=25, validation_split=0.2,callbacks=[tensorboard,check])  # OG 30
+model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2,callbacks=[tensorboard,check])  # OG 30
 
 '''
 i = 20
