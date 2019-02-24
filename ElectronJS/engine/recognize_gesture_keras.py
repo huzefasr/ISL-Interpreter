@@ -66,7 +66,7 @@ def prediction_method():
         cv2.imshow('mask',mask)
         if i%3==0:
             prediction = model.predict([prepare(mask)])
-            display(prediction[0])
+            #display(prediction[0])
             prediction = np.array(prediction)
             prediction = prediction.astype(int)
             print(prediction)
