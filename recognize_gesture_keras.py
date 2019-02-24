@@ -1,6 +1,7 @@
 import cv2
 #import tensorflow as tf
 import keras
+import h5py
 import os
 from methods import method_backproject
 import pickle
@@ -37,7 +38,7 @@ def prepare(mask):
 
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("a-z-20.model")
+    model = keras.models.load_model("a-z-17.model")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
@@ -55,7 +56,7 @@ def prediction_method():
         #cv2.imshow('flip',flip)
         mask = method_backproject(hsv_flip_crop,roi_hist)
         cv2.imshow('mask',mask)
-        if i%3==0:
+        if i%2==0:
             prediction = model.predict([prepare(mask)])
             display(prediction[0])
             prediction = np.array(prediction)
