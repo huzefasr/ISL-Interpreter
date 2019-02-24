@@ -40,7 +40,8 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 
 # remember to  flatten the data since the data is 2d and dense accepts 1d data
 model.add(Flatten())
-#model.add(Dense(128)) # 64 to 32
+#model.add(Dense(64)) # 64 to 32
+
 
 model.add(Dense(26))  # OG 1
 model.add(Activation('sigmoid'))  # sigmoid
@@ -52,7 +53,7 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 # batch size should be kept a little low(20-200) to avoid negative results
 check = ModelCheckpoint("kernel-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
-model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2,callbacks=[tensorboard,check])  # OG 30
+model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2, callbacks=[tensorboard,check])  # OG 30
 
 '''
 i = 20

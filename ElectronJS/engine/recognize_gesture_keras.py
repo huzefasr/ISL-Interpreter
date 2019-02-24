@@ -8,17 +8,13 @@ import pickle
 import numpy as np
 import cv2
 import sys
-from flask import Flask
+from flask import Flask,redirect
 app = Flask(__name__)
 
-if __name__=="__main__":
-    app.run(debug=True)
 
-path = os.getcwd()
-path = os.path.join(path,'dataset')
-category = sorted(os.listdir(path))
-print(category)
-
+@app.route('/')
+def test():
+    return "this is test "
 def display(prediction):
     blackboard = np.ones((150,150))
     previous = 0
@@ -47,6 +43,7 @@ def prepare(mask):
     new_array = cv2.resize(img_array,(IMG_SIZE,IMG_SIZE))
     return new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
 
+@app.route('/capture_gesture')
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
     model = keras.models.load_model("keras-25-0.00215.h5")
@@ -110,6 +107,7 @@ def capture_hist():
             pickle_out.close()
             cap.release()
             cv2.destroyAllWindows()
+            return redirect("recognize_gesture.html", code=302)
             break
         if key == ord('x'):
             cap.release()
@@ -121,10 +119,9 @@ def capture_hist():
         if keyc:
             back = method_backproject(hsv_flip, roi_hist)
             cv2.imshow("back project", back)
+    return None
 
 ####CODDEEEEE
-ch = input("Do you wish to create histogram or use existing\n(y/n)")
-if ch == 'y':
-    capture_hist()
 
-prediction_method()
+if __name__ == "__main__":
+    app.run(debug=True)

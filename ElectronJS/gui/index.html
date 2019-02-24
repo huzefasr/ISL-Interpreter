@@ -12,24 +12,24 @@
     <br>
     <div class="row">
       <div class="col-xs-4" align="left">
-        <img style="width:30%" src="images/add_gesture.png" />
+        <img style="width:30%" src="{{ url_for('static', filename='images/add_gesture.jng') }}"/>
         <br>
-        <a style="color:white" href="create_gesture.html">
+        <a style="color:white" href="http://127.0.0.1:5000/create_gesture.html">
         <button class="btn btn-info">Add Gesture</button>
         </a>
       </div>
       <div class="col-xs-4"  align="center">
-        <img style="width:30%" src="images/train_model.png" />
+        <img style="width:30%" src="{{ url_for('static', filename='images/train_model.jng') }}" />
         <br>
         <a style="color:white" href="train_model.html">
         <button class="btn btn-success">Train Model</button>
         </a>
       </div>
       <div class="col-xs-4"  align="right">
-        <img style="width:30%;padding:5px" src="images/detect_gesture.png" />
+        <img style="width:30%;padding:5px" src="{{ url_for('static', filename='images/detect_gesture.jng') }}" />
         <br>
-        <a style="color:white;" href="http://127.0.0.1:5000/detect">
-        <button class="btn btn-warning"><a style="color:white;" href="recognize_gesture.html">Detect Gesture</button>
+        <a style="color:white;" href="recognize_gesture.html">
+        <button class="btn btn-warning">Detect Gesture</button>
         </a>
       </div>
     </div>
