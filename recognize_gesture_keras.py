@@ -14,6 +14,7 @@ print(category)
 
 def display(prediction):
     blackboard = np.ones((150,150))
+    previous = 0
     i = 1
     hit = 0
     char = ['-']+category
@@ -22,7 +23,10 @@ def display(prediction):
     for alphabet in prediction:
         if alphabet == 1:
             hit=i
+            previous = hit
         i=i+1
+    if hit == 0:
+        hit = previous
     cv2.putText(blackboard, f"{char[hit]}", (30,100), font, 5, (0, 255, 0),5)
 
 
@@ -38,7 +42,7 @@ def prepare(mask):
 
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("a-z-17.model")
+    model = keras.models.load_model("keras-25-0.00215.h5")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
@@ -56,7 +60,7 @@ def prediction_method():
         #cv2.imshow('flip',flip)
         mask = method_backproject(hsv_flip_crop,roi_hist)
         cv2.imshow('mask',mask)
-        if i%2==0:
+        if i%3==0:
             prediction = model.predict([prepare(mask)])
             display(prediction[0])
             prediction = np.array(prediction)
