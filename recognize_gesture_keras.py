@@ -42,7 +42,7 @@ def prepare(mask):
 
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("keras-25-0.00215.h5")
+    model = keras.models.load_model("keras-23-0.00016.h5")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
