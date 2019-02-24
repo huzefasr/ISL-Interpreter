@@ -51,7 +51,7 @@ model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
-# batch size should be kept a little low(20-200) to avoid negative results
+# batch size should be kept a little low(20-200) to avoid negative results 
 check = ModelCheckpoint("kernel-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
 model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2, callbacks=[tensorboard,check])  # OG 30
 
