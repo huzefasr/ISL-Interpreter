@@ -13,7 +13,7 @@ import time
 
 X = pickle.load(open("X.pickle", "rb"))
 Y = pickle.load(open("Y.pickle", "rb"))
-modelname = "a-z-23".format(int(time.time()))
+modelname = "a-z-20".format(int(time.time()))
 tensorboard = TensorBoard(log_dir=f"log/{modelname}")
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
 
@@ -51,15 +51,9 @@ model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
-<<<<<<< HEAD
 # batch size should be kept a little low(20-200) to avoid negative results
-check = ModelCheckpoint("a-z-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
-model.fit(X, Y, batch_size=30, epochs=23, validation_split=0.2, callbacks=[tensorboard,check])  # OG 30
-=======
-# batch size should be kept a little low(20-200) to avoid negative results 
-check = ModelCheckpoint("kernel-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+check = ModelCheckpoint("a-z-20-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
 model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2, callbacks=[tensorboard,check])  # OG 30
->>>>>>> 2db0d1adbdb35df8b9e5fe9a39e4210787302deb
 
 '''
 i = 20

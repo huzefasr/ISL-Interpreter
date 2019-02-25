@@ -31,7 +31,11 @@ def recognize_gesture():
 def capture_histogram():
     return render_template('capture_hist.html')
 
-def display(prediction):
+@app.route('/recognize_gest')
+def recognize_gest():
+    return render_template('recognize_gest.html')
+
+def display(prediction,mask):
     blackboard = np.ones((150,150))
     previous = 0
     i = 1
@@ -48,8 +52,9 @@ def display(prediction):
         hit = previous
     cv2.putText(blackboard, f"{char[hit]}", (30,100), font, 5, (0, 255, 0),5)
 
-
-    cv2.imshow("Gesture",blackboard)
+    blackboard1 = cv2.resize(blackboard, (50,50))
+    mask1 = cv2.resize(mask, (50,50))
+    joint_image = np.hstack((blackboard1,mask1))
 
 
 def prepare(mask):
@@ -59,7 +64,6 @@ def prepare(mask):
     new_array = cv2.resize(img_array,(IMG_SIZE,IMG_SIZE))
     return new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
 
-@app.route('/capture_gesture')
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
     model = keras.models.load_model("keras-25-0.00215.h5")
@@ -79,10 +83,11 @@ def prediction_method():
         hsv_flip_crop = cv2.cvtColor(flip_crop,cv2.COLOR_BGR2HSV)
         #cv2.imshow('flip',flip)
         mask = method_backproject(hsv_flip_crop,roi_hist)
-        cv2.imshow('mask',mask)
+        #cv2.imshow('mask',mask)
+
         if i%3==0:
             prediction = model.predict([prepare(mask)])
-            display(prediction[0])
+            display(prediction[0],mask)
             prediction = np.array(prediction)
             prediction = prediction.astype(int)
             print(prediction)
@@ -142,14 +147,14 @@ def capture_hist():
             back = method_backproject(hsv_flip, roi_hist)
             #cv2.imshow("back project", back)
             imgencode = cv2.imencode('.jpg',back)[1]
-            stringData = imgencode.tostreing()
+            stringData = imgencode.tostring()
             yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData+b'\r\n')
+
     return None
 
-@app.route("/calc")
+@app.route("/capture_histogram")
 def calc():
     return Response( capture_hist(),mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 if __name__ == '__main__':
     app.run(debug=True )
