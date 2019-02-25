@@ -51,6 +51,7 @@ def method_backproject(hsv_flip,roi_hist):
 	img = cv2.filter2D(mask,-1,kernel15) # 9 or 11 works
 	img = cv2.bilateralFilter(img,15,75,50) #
 	img = cv2.GaussianBlur(img,(5,5), 0)
+    
 	_,thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY+ cv2.THRESH_OTSU)
 	#img = cv2.dilate(thresh,kernel3,iterations = 1)
 	#cv2.imshow("final",img)

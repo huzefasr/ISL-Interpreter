@@ -7,6 +7,7 @@ from methods import method_backproject
 import pickle
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
 path = os.getcwd()
 path = os.path.join(path,'dataset')
 category = sorted(os.listdir(path))
@@ -60,6 +61,7 @@ def prediction_method():
         #cv2.imshow('flip',flip)
         mask = method_backproject(hsv_flip_crop,roi_hist)
         cv2.imshow('mask',mask)
+
         if i%3==0:
             prediction = model.predict([prepare(mask)])
             display(prediction[0])
@@ -94,6 +96,8 @@ def capture_hist():
             hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
             roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [
                                     180, 256], [0, 180, 0, 256])
+            plt.imshow(roi_hist)
+            plt.show()
         if key == ord('s'):
             pickle_out = open("hist.pickle", "wb")
             pickle.dump(roi_hist, pickle_out)
