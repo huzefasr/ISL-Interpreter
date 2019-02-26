@@ -39,14 +39,7 @@ def recognize_gest():
 def call_press_c():
     #return press_c()
     capture_hist(c = 1, s = 0 )
-    return blank()
-
-@app.route('/call_to_press_s')
-def call_press_s():
-    #return press_s()
-    capture_hist(c = 1, s = 1 )
-    return blank()
-
+    return render_template('capture_hist.html')
 
 def display(prediction,mask):
     blackboard = np.ones((150,150))
@@ -179,7 +172,6 @@ def capture_hist(c,s):
             roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [
                                         180, 256], [0, 180, 0, 256])
             back = method_backproject(hsv_flip, roi_hist)
-        if s == 1:
             pickle_out = open("hist.pickle", "wb")
             pickle.dump(roi_hist, pickle_out)
             print("histogram saved successfully")
@@ -213,8 +205,6 @@ def press_s():
     pickle_out.close()
     return None
 '''
-def blank():
-    return render_template('capture_hist.html')
 
 @app.route("/calc")
 def calc():
