@@ -24,6 +24,7 @@ function gotResults(error, results) {
 function setup() {
   createCanvas(640, 550);
   video = createCapture(VIDEO);
+  video.hide();
   background(0);
   mobilenet = ml5.imageClassifier('MobileNet', video, modelReady);
 }
