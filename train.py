@@ -3,8 +3,10 @@ from keras.models import Sequential
 from keras.utils import normalize
 from keras.callbacks import TensorBoard,ModelCheckpoint
 import h5py
+#import keras
+#import tensorflowjs as tfjs
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
 import pickle
 import cv2
 import time
@@ -13,8 +15,10 @@ import time
 
 X = pickle.load(open("X.pickle", "rb"))
 Y = pickle.load(open("Y.pickle", "rb"))
-modelname = "a-z-newl-20".format(int(time.time()))
-tensorboard = TensorBoard(log_dir=f"log/{modelname}")
+
+
+#modelname = "a-z-newl-20".format(int(time.time()))
+#tensorboard = TensorBoard(log_dir=f"log/{modelname}")
 #board = TensorBoard(Log_dir="logs/{}".format(modelname))
 
 # Scaling the data. /255 since data is image data
@@ -50,11 +54,12 @@ model.add(Activation('sigmoid'))  # sigmoid
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
+model.save("test.h5")
 
-
+#tfjs.converters.save_keras_model(model,'/jsmodel')
 # batch size should be kept a little low(20-200) to avoid negative results
-check = ModelCheckpoint("a-z-newl-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
-model.fit(X, Y, batch_size=30, epochs=20, validation_split=0.2, callbacks=[tensorboard,check])  # OG 30
+#check = ModelCheckpoint("a-z-newl-{epoch:02d}-{val_loss:.5f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+model.fit(X, Y, batch_size=30, epochs=1, validation_split=0.2)  # OG 30 , callbacks=[tensorboard,check]
 
 
 '''
