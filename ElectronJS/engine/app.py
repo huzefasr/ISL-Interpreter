@@ -151,7 +151,7 @@ def prediction_method():
 #    cap.release()
 #    cv2.destroyAllWindows()
 
-def capture_hist(c,s):
+def capture_hist(c):
     cap = cv2.VideoCapture(0)
     while True:
         key = cv2.waitKey(1)
