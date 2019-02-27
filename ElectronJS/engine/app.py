@@ -1,14 +1,16 @@
 import cv2
 #import tensorflow as tf
-import keras
+#import keras
 import h5py
 import os
 from methods import method_backproject
 import pickle
+import tensorflow as tf
 import numpy as np
 import cv2
 import sys
 from flask import Flask,redirect,render_template,Response
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -38,24 +40,21 @@ def recognize_gest():
 @app.route('/call_to_press_c')
 def call_press_c():
     #return press_c()
-    capture_hist(c = 1, s = 0 )
+    capture_hist(c = 1)
     return render_template('capture_hist.html')
 
+'''
 def display(prediction,mask):
     blackboard = np.ones((150,150))
     previous = 0
     i = 1
     hit = 0
     char = ['-']+['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-    hit_og = [prediction]
     font = cv2.FONT_HERSHEY_SIMPLEX
     for alphabet in prediction:
         if alphabet == 1:
             hit=i
-            previous = hit
         i=i+1
-    if hit == 0:
-        hit = previous
     cv2.putText(blackboard, f"{char[hit]}", (30,100), font, 5, (0, 255, 0),5)
 
     blackboard1 = cv2.resize(blackboard, (50,50))
@@ -65,7 +64,7 @@ def display(prediction,mask):
     imgencode2 = cv2.imencode('.jpg',joint_image)[1]
     stringData2 = imgencode2.tostring()
     yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData2+b'\r\n')
-
+    return None
 
 def prepare(mask):
     IMG_SIZE = 50
@@ -73,15 +72,15 @@ def prepare(mask):
     img_array = mask
     new_array = cv2.resize(img_array,(IMG_SIZE,IMG_SIZE))
     return new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
+'''
 
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("keras-25-0.00215.h5")
+    model = tf.keras.models.load_model("a-z-17.model")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
-        _,frame = cap.read()
-        key = cv2.waitKey(1) # always remember to place inside while loop
+        _,frame = cap.read() # always remember to place inside while loop
         flip = cv2.flip(frame,1)
         y,x,c = flip.shape
         x1 = int(x/2)
@@ -93,12 +92,37 @@ def prediction_method():
         hsv_flip_crop = cv2.cvtColor(flip_crop,cv2.COLOR_BGR2HSV)
         #cv2.imshow('flip',flip_crop)
         mask = method_backproject(hsv_flip_crop,roi_hist)
-        #cv2.imshow('mask',mask)
-        #imgencode2 = cv2.imencode('.jpg',mask)[1]
-        #stringData2 = imgencode2.tostring()
-        #yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData2+b'\r\n')
+        ###################
+        IMG_SIZE = 50
+        #grayscale
+        new_array = cv2.resize(mask,(IMG_SIZE,IMG_SIZE))
+        prep_mask =new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
+        ###########################
+        prediction = model.predict([prep_mask])
 
+        #######################
+        blackboard = np.zeros((150,150))
+        previous = 0
+        i = 1
+        hit = 0
+        char = ['-']+['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        for alphabet in prediction[0]:
+            if alphabet == 1:
+                hit=i
+                previous = hit
+            i=i+1
+        print(char[hit])
+        cv2.putText(blackboard, f"{char[hit]}", (30,100), font, 5, (255, 255, 255),5)
+        #############################
+        blackboard = cv2.resize(blackboard, (300,300))
+        mask = cv2.resize(mask, (300,300))
+        joint_image = np.hstack((blackboard,mask))
+        imgencode2 = cv2.imencode('.jpg',joint_image)[1]
+        stringData2 = imgencode2.tostring()
+        yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData2+b'\r\n')
 
+'''
         if i%3==0:
             i_copy = i
             IMG_SIZE = 50
@@ -114,7 +138,10 @@ def prediction_method():
             previous = 0
             i = 1
             hit = 0
-            char = ['-']+['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+            charprediction = np.array(prediction)
+            prediction = prediction.astype(int)
+            print(prediction)
+            char= ['-']+['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
             hit_og = [prediction[0]]
             font = cv2.FONT_HERSHEY_SIMPLEX
             for alphabet in prediction[0]:
@@ -140,18 +167,11 @@ def prediction_method():
             prediction = np.array(prediction)
             prediction = prediction.astype(int)
             print(prediction)
-
-        i=i+1
-        '''
-        if key == ord('x'):
-            cap.release()
-            cv2.destroyAllWindows()
-            return render_template('recognize_gesture.html')
             '''
 #    cap.release()
 #    cv2.destroyAllWindows()
 
-def capture_hist(c,s):
+def capture_hist(c,i=5):
     cap = cv2.VideoCapture(0)
     while True:
         key = cv2.waitKey(1)
@@ -166,7 +186,7 @@ def capture_hist(c,s):
         rect = cv2.rectangle(flip, (x1, y1), (x2, y2), (255, 0, 0), 1)
         #cv2.imshow("RAW", flip)
 
-        if c == 1:
+        if i%5 == 0:
             roi = flip[y1:y2, x1:x2]
             hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
             roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [
@@ -176,7 +196,7 @@ def capture_hist(c,s):
             pickle.dump(roi_hist, pickle_out)
             print("histogram saved successfully")
             pickle_out.close()
-
+        i = i+1
         imgencode = cv2.imencode('.jpg',flip)[1]
         stringData = imgencode.tostring()
         yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData+b'\r\n')
@@ -208,7 +228,7 @@ def press_s():
 
 @app.route("/calc")
 def calc():
-    return Response( capture_hist(c = 0, s = 0),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response( capture_hist(c = 0),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/calc2")
 def calc2():
@@ -216,4 +236,5 @@ def calc2():
 
 
 if __name__ == '__main__':
+
     app.run(debug=True )
