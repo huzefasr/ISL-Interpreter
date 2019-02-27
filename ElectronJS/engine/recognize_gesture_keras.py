@@ -8,13 +8,8 @@ import pickle
 import numpy as np
 import cv2
 import sys
-from flask import Flask,redirect
-app = Flask(__name__)
 
 
-@app.route('/')
-def test():
-    return "this is test "
 def display(prediction):
     blackboard = np.ones((150,150))
     previous = 0
@@ -43,10 +38,10 @@ def prepare(mask):
     new_array = cv2.resize(img_array,(IMG_SIZE,IMG_SIZE))
     return new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
 
-@app.route('/capture_gesture')
+
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("keras-25-0.00215.h5")
+    model = keras.models.load_model("a-z-17.model")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
@@ -78,7 +73,7 @@ def prediction_method():
     cv2.destroyAllWindows()
 
 
-@app.route("/capture_hist")
+
 def capture_hist():
     cap = cv2.VideoCapture(0)
     keyc, keys = False, False
@@ -123,11 +118,3 @@ def capture_hist():
             back = method_backproject(hsv_flip, roi_hist)
             cv2.imshow("back project", back)
     return None
-
-def calc():
-    return Response(capture_hist().mimetype='multipart/x-mixed-replace; boundary=frame')
-
-####CODDEEEEE
-
-if __name__ == "__main__":
-    app.run(debug=True)
