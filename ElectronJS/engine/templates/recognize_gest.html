@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <title>Creating Histogram</title>
-  </head>
-  <body>
-    <br>
-    <br>
-    <div class="container">
-      <a style="color:white" href="recognize_gesture">
-        <button class="btn btn-info"> Back</button>
-      </a>
-      <div class="jombotron">
-        <h1>Detecting Gesture</h1>
-        <img src="{{ url_for('calc2') }}">
-      </div>
-      <br>
-      <br>
+<html>
 
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="linkers/link.js"></script>
+</head>
 
+<body>
+  <br>
+  <div class="container">
+    <a style="color:white" href="index.html">
+      <button class="btn btn-info"> Back</button>
+    </a>
+    <div class="jumbotron">
+      <h1>Recognize gestures</h1>
+      <h2>Currently Support all Indian Sign Language Alphabets</h2>
+      <p>Remember to create your hand histogram</p>
     </div>
-  </body>
+    <br>
+    <br>
+    <a style="color:white;" href="http://127.0.0.1:5000/capture_hist">
+    <button id="histogram" class="btn btn-success" >Capture Histogram</button>
+    </a>
+    <br>
+    <br>
+    <a style="color:white;" href="http://127.0.0.1:5000/predict_gest">
+    <button id="predict" class="btn btn-success" >Start Prediction</button>
+    </a>
+  </div>
+</body>
 </html>

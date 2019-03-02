@@ -1,5 +1,5 @@
 import cv2
-#import tensorflow as tf
+import tensorflow as tf
 import keras
 import h5py
 import os
@@ -43,7 +43,7 @@ def prepare(mask):
 
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("a-z-12-0.00012.h5")
+    model = keras.models.load_model("a-z.h5")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
@@ -96,8 +96,6 @@ def capture_hist():
             hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
             roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [
                                     180, 256], [0, 180, 0, 256])
-            plt.imshow(roi_hist)
-            plt.show()
         if key == ord('s'):
             pickle_out = open("hist.pickle", "wb")
             pickle.dump(roi_hist, pickle_out)

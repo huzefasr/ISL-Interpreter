@@ -1,5 +1,5 @@
 import cv2
-#import tensorflow as tf
+import tensorflow as tf
 import keras
 import h5py
 import os
@@ -7,14 +7,17 @@ from methods import method_backproject
 import pickle
 import numpy as np
 import cv2
-import sys
-from flask import Flask,redirect
+import matplotlib.pyplot as plt
+from flask import Flask,redirect,render_template,Response
+
 app = Flask(__name__)
 
 
-@app.route('/')
-def test():
-    return "this is test "
+path = os.getcwd()
+path = os.path.join(path,'dataset')
+category = sorted(os.listdir(path))
+print(category)
+
 def display(prediction):
     blackboard = np.ones((150,150))
     previous = 0
@@ -43,10 +46,10 @@ def prepare(mask):
     new_array = cv2.resize(img_array,(IMG_SIZE,IMG_SIZE))
     return new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
 
-@app.route('/capture_gesture')
+@app.route("/predict_gest")
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("keras-25-0.00215.h5")
+    model = keras.models.load_model("a-z-17.model")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
@@ -64,9 +67,10 @@ def prediction_method():
         #cv2.imshow('flip',flip)
         mask = method_backproject(hsv_flip_crop,roi_hist)
         cv2.imshow('mask',mask)
+
         if i%3==0:
             prediction = model.predict([prepare(mask)])
-            #display(prediction[0])
+            display(prediction[0])
             prediction = np.array(prediction)
             prediction = prediction.astype(int)
             print(prediction)
@@ -76,7 +80,7 @@ def prediction_method():
             break
     cap.release()
     cv2.destroyAllWindows()
-
+    return render_template("recognize_gest.html")
 
 @app.route("/capture_hist")
 def capture_hist():
@@ -93,10 +97,7 @@ def capture_hist():
         x2 = x1 + 70
         y2 = y1 + 200
         rect = cv2.rectangle(flip, (x1, y1), (x2, y2), (255, 0, 0), 1)
-        #cv2.imshow("RAW", flip)
-        imgencode = cv2.emencode('.jpg',flip)[1]
-        stringata=imgencode.tostring()
-        yield (b'--frame\r\n' b'content-Type: text/plain\r\n\r\n'+stringgData+b'\r\n')
+        cv2.imshow("RAW", flip)
         if key == ord('c'):
             keyc = True
             roi = flip[y1:y2, x1:x2]
@@ -110,7 +111,6 @@ def capture_hist():
             pickle_out.close()
             cap.release()
             cv2.destroyAllWindows()
-            return redirect("recognize_gesture.html", code=302)
             break
         if key == ord('x'):
             cap.release()
@@ -122,12 +122,16 @@ def capture_hist():
         if keyc:
             back = method_backproject(hsv_flip, roi_hist)
             cv2.imshow("back project", back)
-    return None
-
-def calc():
-    return Response(capture_hist().mimetype='multipart/x-mixed-replace; boundary=frame')
+    return render_template("recognize_gest.html")
 
 ####CODDEEEEE
+'''
+ch = input("Do you wish to create histogram or use existing\n(y/n)")
+if ch == 'y':
+    capture_hist()
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+prediction_method()
+'''
+
+app.run()
