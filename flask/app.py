@@ -41,11 +41,7 @@ def recognize_gest():
 def call_press_c():
     #return press_c()
     capture_hist(c = 1)
-<<<<<<< HEAD
     return render_template('recognize_gesture.html')
-=======
-    return render_template('capture_hist.html')
->>>>>>> b397c9ffa7007dbe5a121559a9341b0e5312b96d
 
 '''
 def display(prediction,mask):
@@ -201,10 +197,7 @@ def capture_hist(c,i=5):
             print("histogram saved successfully")
             pickle_out.close()
         i = i+1
-<<<<<<< HEAD
-
-=======
->>>>>>> b397c9ffa7007dbe5a121559a9341b0e5312b96d
+        
         imgencode = cv2.imencode('.jpg',flip)[1]
         stringData = imgencode.tostring()
         yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData+b'\r\n')
