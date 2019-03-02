@@ -43,7 +43,7 @@ def prepare(mask):
 
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = keras.models.load_model("a-z-12-0.00012.h5")
+    model = keras.models.load_model("a-z.h5")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
@@ -58,7 +58,7 @@ def prediction_method():
         flip_crop = flip[y1:y2,x1:x2]
         rect = cv2.rectangle(flip, (x1,y1), (x2,y2), (255,0,0), 1)
         hsv_flip_crop = cv2.cvtColor(flip_crop,cv2.COLOR_BGR2HSV)
-        #cv2.imshow('flip',flip)
+        cv2.imshow('flip',flip)
         mask = method_backproject(hsv_flip_crop,roi_hist)
         cv2.imshow('mask',mask)
 
@@ -67,7 +67,6 @@ def prediction_method():
             display(prediction[0])
             prediction = np.array(prediction)
             prediction = prediction.astype(int)
-            print(prediction)
 
         i=i+1
         if key == ord('x'):
@@ -96,8 +95,6 @@ def capture_hist():
             hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
             roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [
                                     180, 256], [0, 180, 0, 256])
-            plt.imshow(roi_hist)
-            plt.show()
         if key == ord('s'):
             pickle_out = open("hist.pickle", "wb")
             pickle.dump(roi_hist, pickle_out)

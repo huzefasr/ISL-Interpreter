@@ -5,6 +5,8 @@ from colorama import Fore
 import random
 import numpy as np
 import pickle
+import time
+start = time.time()
 def category_data():
     path = os.getcwd()
     path_dataset = os.path.join(path,'dataset')
@@ -59,7 +61,7 @@ if __name__ == "__main__":
     X = np.array(X).reshape(-1,rows,columns,1)
 
     try:
-        pickle_out = open("X.pickle",'wb')
+        pickle_out = open(("X.pickle",'wb'))
         pickle.dump(X,pickle_out)
         pickle_out.close()
         pickle_out = open("Y.pickle",'wb')
@@ -71,3 +73,6 @@ if __name__ == "__main__":
     else:
         print(Fore.GREEN + "Pickled out successfully")
         print("object added: " + str(len(Y)))
+
+    end = time.time()
+    print(f"total time taken :{end-start}")
