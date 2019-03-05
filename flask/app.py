@@ -24,11 +24,11 @@ def add_gesture():
 @app.route('/train_model')
 def train_model():
     return render_template('train_model.html')
-'''
+
 @app.route('/recognize_gesture')
 def recognize_gesture():
     return render_template('recognize_gesture.html')
-
+'''
 @app.route('/capture_hist')
 def capture_histogram():
     return render_template('capture_hist.html')
@@ -40,8 +40,7 @@ def recognize_gest():
 @app.route('/call_to_press_c')
 def call_press_c():
     #return press_c()
-    capture_hist(c = 1)
-    return render_template('recognize_gesture.html')
+    return render_template('recognize_gest.html')
 
 '''
 def display(prediction,mask):
@@ -76,7 +75,7 @@ def prepare(mask):
 
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
-    model = tf.keras.models.load_model("a-z-17.model")
+    model = tf.keras.models.load_model("a-z.h5")
     cap = cv2.VideoCapture(0)
     i=0
     while True:
@@ -197,7 +196,7 @@ def capture_hist(c,i=5):
             print("histogram saved successfully")
             pickle_out.close()
         i = i+1
-        
+
         imgencode = cv2.imencode('.jpg',flip)[1]
         stringData = imgencode.tostring()
         yield (b'--frame\r\n' b'Content-type: text/plain\r\n\r\n'+stringData+b'\r\n')

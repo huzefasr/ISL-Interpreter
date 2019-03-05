@@ -7,10 +7,10 @@ from methods import method_backproject
 import pickle
 import numpy as np
 import cv2
-<<<<<<< HEAD
 import matplotlib.pyplot as plt
-from flask import Flask,redirect,render_template,Response
+import sys
 
+from flask import Flask,redirect,render_template,Response
 app = Flask(__name__)
 
 
@@ -19,11 +19,6 @@ path = os.path.join(path,'dataset')
 category = sorted(os.listdir(path))
 print(category)
 
-=======
-import sys
-
-
->>>>>>> b397c9ffa7007dbe5a121559a9341b0e5312b96d
 def display(prediction):
     blackboard = np.ones((150,150))
     previous = 0
@@ -52,11 +47,8 @@ def prepare(mask):
     new_array = cv2.resize(img_array,(IMG_SIZE,IMG_SIZE))
     return new_array.reshape(-1,IMG_SIZE,IMG_SIZE,1)
 
-<<<<<<< HEAD
-@app.route("/predict_gest")
-=======
 
->>>>>>> b397c9ffa7007dbe5a121559a9341b0e5312b96d
+@app.route("/predict_gest")
 def prediction_method():
     roi_hist = pickle.load(open("hist.pickle",'rb'))
     model = keras.models.load_model("a-z-17.model")
@@ -92,7 +84,7 @@ def prediction_method():
     cv2.destroyAllWindows()
     return render_template("recognize_gest.html")
 
-
+@app.route("capture_hist")
 def capture_hist():
     cap = cv2.VideoCapture(0)
     keyc, keys = False, False
@@ -132,10 +124,8 @@ def capture_hist():
         if keyc:
             back = method_backproject(hsv_flip, roi_hist)
             cv2.imshow("back project", back)
-<<<<<<< HEAD
-    return render_template("recognize_gest.html")
+    return render_template("capture_hist.html")
 
-####CODDEEEEE
 '''
 ch = input("Do you wish to create histogram or use existing\n(y/n)")
 if ch == 'y':
@@ -146,6 +136,3 @@ prediction_method()
 '''
 
 app.run()
-=======
-    return None
->>>>>>> b397c9ffa7007dbe5a121559a9341b0e5312b96d
