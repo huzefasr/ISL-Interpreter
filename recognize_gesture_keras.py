@@ -8,12 +8,23 @@ import pickle
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+##SPEACH
+import pyttsx3
+k = pyttsx3.init()
+
+
+
 path = os.getcwd()
 path = os.path.join(path,'dataset')
 category = sorted(os.listdir(path))
 print(category)
 
-def display(prediction):
+def say_text(text):
+    k.say(text)
+    k.runAndWait()
+
+
+def display(prediction,previous):
     blackboard = np.ones((150,150))
     previous = 0
     i = 1
@@ -28,11 +39,12 @@ def display(prediction):
         i=i+1
     if hit == 0:
         hit = previous
-    cv2.putText(blackboard, f"{char[hit]}", (30,100), font, 5, (0, 255, 0),5)
+    letter = char[hit]
+    cv2.putText(blackboard, f"{letter}", (30,100), font, 5, (0, 255, 0),5)
 
-
+    ### SPEACH
     cv2.imshow("Gesture",blackboard)
-
+    return letter
 
 def prepare(mask):
     IMG_SIZE = 50
@@ -46,6 +58,7 @@ def prediction_method():
     model = keras.models.load_model("a-z.h5")
     cap = cv2.VideoCapture(0)
     i=0
+    previous = '-'
     while True:
         _,frame = cap.read()
         key = cv2.waitKey(1) # always remember to place inside while loop
@@ -64,9 +77,10 @@ def prediction_method():
 
         if i%3==0:
             prediction = model.predict([prepare(mask)])
-            display(prediction[0])
-            prediction = np.array(prediction)
-            prediction = prediction.astype(int)
+            letter = display(prediction[0],previous)
+            #####SPEACH
+            say_text(letter)
+
 
         i=i+1
         if key == ord('x'):
