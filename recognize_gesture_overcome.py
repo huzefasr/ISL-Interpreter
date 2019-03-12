@@ -10,7 +10,118 @@ import cv2
 import matplotlib.pyplot as plt
 import pyttsx3
 from googletrans import Translator
-global letter
+global name
+global LANGUAGES
+global LANGCODES
+LANGUAGES = {
+'af': 'afrikaans',
+'sq': 'albanian',
+'am': 'amharic',
+'ar': 'arabic',
+'hy': 'armenian',
+'az': 'azerbaijani',
+'eu': 'basque',
+'be': 'belarusian',
+'bn': 'bengali',
+'bs': 'bosnian',
+'bg': 'bulgarian',
+'ca': 'catalan',
+'ceb': 'cebuano',
+'ny': 'chichewa',
+'zh-cn': 'chinese (simplified)',
+'zh-tw': 'chinese (traditional)',
+'co': 'corsican',
+'hr': 'croatian',
+'cs': 'czech',
+'da': 'danish',
+'nl': 'dutch',
+'en': 'english',
+'eo': 'esperanto',
+'et': 'estonian',
+'tl': 'filipino',
+'fi': 'finnish',
+'fr': 'french',
+'fy': 'frisian',
+'gl': 'galician',
+'ka': 'georgian',
+'de': 'german',
+'el': 'greek',
+'gu': 'gujarati',
+'ht': 'haitian creole',
+'ha': 'hausa',
+'haw': 'hawaiian',
+'iw': 'hebrew',
+'hi': 'hindi',
+'hmn': 'hmong',
+'hu': 'hungarian',
+'is': 'icelandic',
+'ig': 'igbo',
+'id': 'indonesian',
+'ga': 'irish',
+'it': 'italian',
+'ja': 'japanese',
+'jw': 'javanese',
+'kn': 'kannada',
+'kk': 'kazakh',
+'km': 'khmer',
+'ko': 'korean',
+'ku': 'kurdish (kurmanji)',
+'ky': 'kyrgyz',
+'lo': 'lao',
+'la': 'latin',
+'lv': 'latvian',
+'lt': 'lithuanian',
+'lb': 'luxembourgish',
+'mk': 'macedonian',
+'mg': 'malagasy',
+'ms': 'malay',
+'ml': 'malayalam',
+'mt': 'maltese',
+'mi': 'maori',
+'mr': 'marathi',
+'mn': 'mongolian',
+'my': 'myanmar (burmese)',
+'ne': 'nepali',
+'no': 'norwegian',
+'ps': 'pashto',
+'fa': 'persian',
+'pl': 'polish',
+'pt': 'portuguese',
+'pa': 'punjabi',
+'ro': 'romanian',
+'ru': 'russian',
+'sm': 'samoan',
+'gd': 'scots gaelic',
+'sr': 'serbian',
+'st': 'sesotho',
+'sn': 'shona',
+'sd': 'sindhi',
+'si': 'sinhala',
+'sk': 'slovak',
+'sl': 'slovenian',
+'so': 'somali',
+'es': 'spanish',
+'su': 'sundanese',
+'sw': 'swahili',
+'sv': 'swedish',
+'tg': 'tajik',
+'ta': 'tamil',
+'te': 'telugu',
+'th': 'thai',
+'tr': 'turkish',
+'uk': 'ukrainian',
+'ur': 'urdu',
+'uz': 'uzbek',
+'vi': 'vietnamese',
+'cy': 'welsh',
+'xh': 'xhosa',
+'yi': 'yiddish',
+'yo': 'yoruba',
+'zu': 'zulu',
+'fil': 'Filipino',
+'he': 'Hebrew'
+}
+LANGCODES = dict(map(reversed, LANGUAGES.items()))
 translator = Translator()
 engine = pyttsx3.init()
 path = os.getcwd()
@@ -22,9 +133,17 @@ def say(text):
     engine.runAndWait()
 
 def translate(text):
-    map_table = {"hindi":"hi","gujrati":"gu","english:en","marathi":"mr"}
-    text = translator.translate(text, dest='hi')
+    try:
+        code = LANGCODES[name]
+    except:
+        code = "en"
+        say("Language Not found")
+    print (code)
     print(text)
+    if text=='':
+        return None
+    text = translator.translate(text,src ="en", dest=code)
+    print(text.text)
     say(text.text)
 
 def display(prediction):
@@ -103,7 +222,7 @@ def prediction_method():
     while True:
         _,frame = cap.read()
         ###resize
-        frame = cv2.resize(frame,(720,480))
+        #frame = cv2.resize(frame,(720,480))
         key = cv2.waitKey(1) # always remember to place inside while loop
         flip = cv2.flip(frame,1)
         y,x,c = flip.shape
@@ -122,7 +241,7 @@ def prediction_method():
         prediction = prediction[0]
 
         old_letter = array.append(letter)
-        if len(array) == 25:
+        if len(array) == 20:
             array = array[1:]
         print(array)
         letter = display(prediction)
@@ -141,7 +260,7 @@ def prediction_method():
         if key == ord('t'):
             translate(word_string)
         if keyw:
-            if letter != "-" and count > 17:
+            if letter != "-" and count > 18:
                 say(letter)
                 if space:
                     word_string = word_string + " "
@@ -170,7 +289,7 @@ def capture_hist():
     while True:
         key = cv2.waitKey(1)
         _, frame = cap.read()
-        frame = cv2.resize(frame,(720,480))
+        #frame = cv2.resize(frame,(720,480))
         flip = cv2.flip(frame, 1)
         hsv_flip = cv2.cvtColor(flip, cv2.COLOR_BGR2HSV)
         y, x, c = flip.shape
@@ -208,7 +327,7 @@ def capture_hist():
             cv2.imshow("back project", back)
 
 ####CODDEEEEE
-letter = input("please enter the preferred language:/n")
+name = input("please enter the preferred language:\n")
 ch = input("Do you wish to create histogram or use existing\n(y/n)").lower()
 if ch == 'y':
     capture_hist()
