@@ -9,6 +9,9 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import pyttsx3
+from googletrans import Translator
+global letter
+translator = Translator()
 engine = pyttsx3.init()
 path = os.getcwd()
 path = os.path.join(path,'dataset')
@@ -18,8 +21,14 @@ def say(text):
     engine.say(text)
     engine.runAndWait()
 
+def translate(text):
+    map_table = {"hindi":"hi","gujrati":"gu","english:en","marathi":"mr"}
+    text = translator.translate(text, dest='hi')
+    print(text)
+    say(text.text)
+
 def display(prediction):
-    blackboard = np.ones((150,150))
+    blackboardtranslation = np.ones((150,150))
     previous = 0
     i = 1
     hit = 0
@@ -93,6 +102,8 @@ def prediction_method():
     keys = False
     while True:
         _,frame = cap.read()
+        ###resize
+        frame = cv2.resize(frame,(720,480))
         key = cv2.waitKey(1) # always remember to place inside while loop
         flip = cv2.flip(frame,1)
         y,x,c = flip.shape
@@ -111,7 +122,7 @@ def prediction_method():
         prediction = prediction[0]
 
         old_letter = array.append(letter)
-        if len(array) == 35:
+        if len(array) == 25:
             array = array[1:]
         print(array)
         letter = display(prediction)
@@ -127,8 +138,10 @@ def prediction_method():
             space = True
         if key == ord('s'):
             say(word_string)
+        if key == ord('t'):
+            translate(word_string)
         if keyw:
-            if letter != "-" and count > 30:
+            if letter != "-" and count > 17:
                 say(letter)
                 if space:
                     word_string = word_string + " "
@@ -157,6 +170,7 @@ def capture_hist():
     while True:
         key = cv2.waitKey(1)
         _, frame = cap.read()
+        frame = cv2.resize(frame,(720,480))
         flip = cv2.flip(frame, 1)
         hsv_flip = cv2.cvtColor(flip, cv2.COLOR_BGR2HSV)
         y, x, c = flip.shape
@@ -194,7 +208,8 @@ def capture_hist():
             cv2.imshow("back project", back)
 
 ####CODDEEEEE
-ch = input("Do you wish to create histogram or use existing\n(y/n)")
+letter = input("please enter the preferred language:/n")
+ch = input("Do you wish to create histogram or use existing\n(y/n)").lower()
 if ch == 'y':
     capture_hist()
 
