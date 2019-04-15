@@ -136,17 +136,14 @@ def say(text):
 def translate(text):
     try:
         code = LANGCODES[name]
+        text = translator.translate(text, dest=code)
+        say(text.text)
     except:
         code = "en"
         say("Language Not found")
-    text = translator.translate(text, dest=code)
-    print (code)
-    print(text)
     if text=='':
         return None
-    text = translator.translate(text,src ="en", dest=code)
-    print(text.text)
-    say(text.text)
+
 
 def display(prediction):
     blackboardtranslation = np.ones((150,150))
@@ -224,7 +221,7 @@ def prediction_method():
     while True:
         _,frame = cap.read()
         ###resize
-        #frame = cv2.resize(frame,(720,480))
+        frame = cv2.resize(frame,(640,450))
         key = cv2.waitKey(1) # always remember to place inside while loop
         flip = cv2.flip(frame,1)
         y,x,c = flip.shape
@@ -291,7 +288,7 @@ def capture_hist():
     while True:
         key = cv2.waitKey(1)
         _, frame = cap.read()
-        #frame = cv2.resize(frame,(720,480))
+        frame = cv2.resize(frame,(640,450))
         flip = cv2.flip(frame, 1)
         hsv_flip = cv2.cvtColor(flip, cv2.COLOR_BGR2HSV)
         y, x, c = flip.shape
@@ -299,8 +296,8 @@ def capture_hist():
         y1 = int(y / 4)
         x2 = x1 + 70
         y2 = y1 + 200
-        rect = cv2.rectangle(flip, (x1, y1), (x2, y2), (255, 0, 0), 1)
-        cv2.imshow("RAW", flip)
+
+
         if key == ord('c'):
             keyc = True
             roi = flip[y1:y2, x1:x2]
@@ -327,7 +324,8 @@ def capture_hist():
         if keyc:
             back = method_backproject(hsv_flip, roi_hist)
             cv2.imshow("back project", back)
-
+        rect = cv2.rectangle(flip, (x1, y1), (x2, y2), (255, 0, 0), 1)
+        cv2.imshow("RAW", flip)
 ####CODDEEEEE
 name = input("please enter the preferred language:\n")
 ch = input("Do you wish to create histogram or use existing\n(y/n)").lower()
